@@ -1,0 +1,78 @@
+body {
+    background-color: #f8f9fa;
+    font-family: 'Poppins', sans-serif;
+}
+.banner {
+    position: relative;
+    width: 100%;
+    height: 300px; /* Ajusta el alto del banner */
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.banner img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute; /* Permite superponer la capa de cristal */
+    z-index: 1;
+}
+
+.banner::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.2); /* Fondo semitransparente */
+    backdrop-filter: blur(10px); /* Efecto de desenfoque estilo cristal */
+    -webkit-backdrop-filter: blur(10px); /* Compatibilidad con navegadores Webkit */
+    z-index: 2;
+}
+
+.banner .content {
+    position: relative;
+    z-index: 3; /* Asegura que el texto quede visible sobre las capas */
+    color: #fff;
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Mejora la visibilidad del texto */
+}
+nav {
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+nav .nav-link {
+    font-weight: 500;
+    font-size: 1.1rem;
+}
+#center {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+table {
+    border: 3px solid black;
+    width: 100%;
+}
+.sup {
+    border: 3px solid black;
+    background-color: #333;
+    color:white;
+    padding: 40px;
+    border-radius: 15px;
+}
+td {
+    border: 1px solid black;
+    background-color: white;
+    color:black;
+}
+
+.tabla {
+    padding: 40px;
+    border-radius: 15px;
+}
