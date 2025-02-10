@@ -2,21 +2,47 @@
 session_start();
 require '../src/php/db.php';
 
-$sql = "SELECT * FROM coches";
-$consulta = mysqli_query($conn, $sql) or die("Fallo en la consulta");
+if (!isset($_SESSION['usuario_id'])) {
+    header("Location: login.php");
+    exit();
+}
 
-$nfilas = mysqli_num_rows($consulta);
+$id_coche = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+
+if ($id_coche <= 0) {
+    die("Coche no válido.");
+}
+
+$sql = "SELECT * FROM coches WHERE id_coche = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $id_coche);
+$stmt->execute();
+$resultado = $stmt->get_result()->fetch_assoc();
+
+if (!$resultado) {
+    die("Coche no encontrado.");
+}
+
+$id_usuario = $_SESSION['usuario_id'];
+$sql_usuario = "SELECT saldo FROM usuarios WHERE id_usuario = ?";
+$stmt_usuario = $conn->prepare($sql_usuario);
+$stmt_usuario->bind_param("i", $id_usuario);
+$stmt_usuario->execute();
+$resultado_usuario = $stmt_usuario->get_result()->fetch_assoc();
+
+$saldo = $resultado_usuario['saldo'];
+$precio = $resultado['precio'];
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Platinum Auto | Listado de coches</title>
+    <title>Alquilar <?php echo htmlspecialchars($resultado['marca']) . " " . htmlspecialchars($resultado['modelo']); ?></title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../src/css/general.css">
-    <link rel="stylesheet" href="../src/css/coches.css">
 </head>
 <body>
     <div class="banner">
@@ -63,34 +89,26 @@ $nfilas = mysqli_num_rows($consulta);
         </div>
     </nav>
 
-    <div class="container my-5" id="center" style="align-items: center; justify-content: center; display: flex; text-align: center;">
-    <h3>Listado de coches:</h3>
-        <div class="row">
-            <?php if ($nfilas > 0): ?>
-                <?php while ($resultado = mysqli_fetch_array($consulta)): ?>
-                    <div class="col-md-4">
-                        <div class="card">
-                            <img src="../<?php echo htmlspecialchars($resultado['foto']); ?>" alt="Foto" class="img-fluid rounded mb-3">
-                            <div class="card-body">
-                                <h5 class="card-title"><?php echo htmlspecialchars($resultado['marca']); ?> <?php echo htmlspecialchars($resultado['modelo']); ?></h5>
-                                <p class="card-text"><?php echo htmlspecialchars($resultado['color']); ?></p>
-                                <p class="card-text" style="font-weight: bold; color: #E74C3C;"><?php echo number_format($resultado['precio'], 2); ?> €</p>
-                                <?php if (!isset($_SESSION['usuario_id'])): ?>
-                                        <button class="btn btn-primary" style="width: 100%; background-color:rgb(20, 160, 241); border: none;" onclick="window.location.href='../login.php'">
-                                            Inicia sesión para alquilar
-                                        </button>
-                                    <?php elseif ($resultado['alquilado'] == 0): ?>
-                                        <button class="btn btn-primary" style="width: 100%; background-color:rgb(14, 146, 42); border: none;" onclick="window.location.href='alquilar.php?id=<?php echo $resultado['id_coche']; ?>'">Alquilar</button>
-                                    <?php else: ?>
-                                        <button class="btn btn-secondary" style="width: 100%; background-color:rgb(78, 7, 7); border: none;" disabled>No disponible</button>
-                                <?php endif; ?>
-                            </div>
-                        </div>
-                    </div>
-                <?php endwhile; ?>
-            <?php else: ?>
-                <p>No se han encontrado coches en el sistema.</p>
-            <?php endif; ?>
+    <div class="container my-5" id="center" style="align-items: center; justify-content: center; text-align: center;">
+        <h3>Alquilar: <?php echo htmlspecialchars($resultado['marca']) . " " . htmlspecialchars($resultado['modelo']); ?></h3><br>
+        <div class="row d-flex align-items-center">
+            <div class="col-md-6">
+                <img src="../<?php echo htmlspecialchars($resultado['foto']); ?>" alt="Imagen del coche" class="img-fluid">
+            </div>
+            
+            <div class="col-md-6" style="text-align: center; justify-content: center;">
+                <h4>Precio: <?php echo number_format($precio, 2); ?> €</h4>
+                <p><strong>Color:</strong> <?php echo htmlspecialchars($resultado['color']); ?></p>
+                
+                <?php if ($saldo >= $precio): ?>
+                    <form action="pago.php" method="POST">
+                        <input type="hidden" name="id_coche" value="<?php echo $id_coche; ?>">
+                        <button type="submit" class="btn btn-success">Realizar el pago</button>
+                    </form>
+                <?php else: ?>
+                    <p class="text-danger">No tienes saldo suficiente.</p>
+                <?php endif; ?>
+            </div>
         </div>
     </div>
 
@@ -98,4 +116,8 @@ $nfilas = mysqli_num_rows($consulta);
 </body>
 </html>
 
-<?php mysqli_close($conn); ?>
+<?php
+$stmt->close();
+$stmt_usuario->close();
+mysqli_close($conn);
+?>
