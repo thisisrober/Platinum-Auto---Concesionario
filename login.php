@@ -6,18 +6,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $dni = trim($_POST['dni']);
     $password = trim($_POST['password']);
     
-    $stmt = $conn->prepare("SELECT id_usuario, password, tipo_usuario FROM Usuarios WHERE dni = ?");
+    $stmt = $conn->prepare("SELECT id_usuario, password, nombre, apellidos, tipo_usuario FROM usuarios WHERE dni = ?");
     $stmt->bind_param("s", $dni);
     $stmt->execute();
     $stmt->store_result();
     
     if ($stmt->num_rows > 0) {
-        $stmt->bind_result($id_usuario, $hashed_password, $tipo_usuario);
+        $stmt->bind_result($id_usuario, $hashed_password, $nombre, $apellidos, $tipo_usuario);
         $stmt->fetch();
         
         if (password_verify($password, $hashed_password)) {
             $_SESSION['usuario_id'] = $id_usuario;
             $_SESSION['tipo_usuario'] = $tipo_usuario;
+            $_SESSION['nombre'] = $nombre;
+            $_SESSION['apellidos'] = $apellidos;
             header("Location: index.php");
             exit();
         } else {

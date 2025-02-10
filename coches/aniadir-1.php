@@ -1,22 +1,38 @@
 <?php
-session_start();
-require '../src/php/db.php';
+    session_start();
+    require '../src/php/db.php';
 
-$sql = "SELECT * FROM coches";
-$consulta = mysqli_query($conn, $sql) or die("Fallo en la consulta");
+    $modelo = trim(strip_tags($_REQUEST['modelo']));
+    $marca = trim(strip_tags($_REQUEST['marca']));
+    $color = trim(strip_tags($_REQUEST['color']));
+    $precio = trim(strip_tags($_REQUEST['precio']));
+    $foto = "";
 
-$nfilas = mysqli_num_rows($consulta);
+    if (isset($_FILES['foto']) && $_FILES['foto']['error'] == UPLOAD_ERR_OK) {
+        $uploadDir = '../src/img/uploads/';
+        $uploadFile = $uploadDir . basename($_FILES['foto']['name']);
+
+        if (move_uploaded_file($_FILES['foto']['tmp_name'], $uploadFile)) {
+            $foto = 'src/img/uploads/' . basename($_FILES['foto']['name']);
+        } else {
+            echo "Error al subir la imagen.";
+            exit;
+        }
+    }
+
+    $sql = "INSERT INTO coches (modelo, marca, color, precio, foto) VALUES ('$modelo', '$marca', '$color', '$precio', '$foto')";
+
+    if (mysqli_query($conn, $sql)) {
 ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Platinum Auto | Listado de coches</title>
+    <title>Platinum Auto | Añadir coche</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../src/css/general.css">
-    <link rel="stylesheet" href="../src/css/coches.css">
 </head>
 <body>
     <div class="banner">
@@ -63,39 +79,18 @@ $nfilas = mysqli_num_rows($consulta);
         </div>
     </nav>
 
-    <div class="container my-5" id="center" style="align-items: center; justify-content: center; display: flex; text-align: center;">
-    <h3>Listado de coches:</h3>
-        <div class="row">
-            <?php if ($nfilas > 0): ?>
-                <?php while ($resultado = mysqli_fetch_array($consulta)): ?>
-                    <div class="col-md-4">
-                        <div class="card">
-                            <img src="../<?php echo htmlspecialchars($resultado['foto']); ?>" alt="Foto" class="img-fluid rounded mb-3">
-                            <div class="card-body">
-                                <h5 class="card-title"><?php echo htmlspecialchars($resultado['marca']); ?> <?php echo htmlspecialchars($resultado['modelo']); ?></h5>
-                                <p class="card-text"><?php echo htmlspecialchars($resultado['color']); ?></p>
-                                <p class="card-text" style="font-weight: bold; color: #E74C3C;"><?php echo htmlspecialchars($resultado['precio']); ?> €</p>
-                                <?php if (!isset($_SESSION['usuario_id'])): ?>
-                                        <button class="btn btn-primary" style="width: 100%; background-color:rgb(20, 160, 241); border: none;" onclick="window.location.href='../login.php'">
-                                            Inicia sesión para alquilar
-                                        </button>
-                                    <?php elseif ($resultado['alquilado'] == 0): ?>
-                                        <button class="btn btn-primary" style="width: 100%; background-color:rgb(14, 146, 42); border: none;">Alquilar</button>
-                                    <?php else: ?>
-                                        <button class="btn btn-secondary" style="width: 100%; background-color:rgb(78, 7, 7); border: none;" disabled>No disponible</button>
-                                <?php endif; ?>
-                            </div>
-                        </div>
-                    </div>
-                <?php endwhile; ?>
-            <?php else: ?>
-                <p>No se han encontrado coches en el sistema.</p>
-            <?php endif; ?>
-        </div>
+    <div class="container my-5" id="center">
+        <h3>¡El coche ha sido añadido!</h3>
+        <a href="index.php">Volver al menú de la categoría</a>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+<?php
+    } else {
+        echo 'Error al añadir: ' . mysqli_error($conn);
+    }
 
-<?php mysqli_close($conn); ?>
+    mysqli_close($conn);
+?>

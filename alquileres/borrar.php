@@ -1,27 +1,19 @@
 <?php
-$servername = 'localhost';
-$username = 'root';
-$password = 'rootroot';
-$dbname = 'concesionario';
-
-$conn = mysqli_connect($servername, $username, $password, $dbname);
-
-if (!$conn) {
-    die('Error al conectar con la base de datos: ' . mysqli_connect_error());
-}
+session_start();
+require '../src/php/db.php';
 
 if (isset($_POST['id_alquiler']) && !empty($_POST['id_alquiler'])) {
     $id_alquiler = $_POST['id_alquiler'];
-    $sql_delete = "DELETE FROM Alquileres WHERE id_alquiler = $id_alquiler";
+    $sql_delete = "DELETE FROM alquileres WHERE id_alquiler = $id_alquiler";
     mysqli_query($conn, $sql_delete);
     header("Location: borrar.php");
     exit();
 }
 
 $sql = "SELECT a.id_alquiler, u.nombre, u.apellidos, c.modelo, c.marca 
-        FROM Alquileres a 
-        JOIN Usuarios u ON a.id_usuario = u.id_usuario 
-        JOIN Coches c ON a.id_coche = c.id_coche";
+        FROM alquileres a 
+        JOIN usuarios u ON a.id_usuario = u.id_usuario 
+        JOIN coches c ON a.id_coche = c.id_coche";
 $result = mysqli_query($conn, $sql);
 ?>
 <!DOCTYPE html>
@@ -42,23 +34,35 @@ $result = mysqli_query($conn, $sql);
     <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container">
             <a class="navbar-brand fw-bold" href="#">Platinum Auto</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="../index.html">Inicio</a>
+                        <a class="nav-link" href="../coches/index.php">Coches</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="../coches/index.html">Coches</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="../usuarios/index.html">Usuarios</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="index.html">Alquileres</a>
-                    </li>
+                    <?php if (!isset($_SESSION['usuario_id'])): ?>
+                        <li class="nav-item">
+                            <a class="nav-link" href="../registro.php">Registro</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="../login.php">Iniciar Sesión</a>
+                        </li>
+                    <?php else: ?>
+                        <?php if ($_SESSION['tipo_usuario'] == 'vendedor'): ?>
+                            <li class="nav-item">
+                                <a class="nav-link" href="index.php">Alquileres</a>
+                            </li>
+                        <?php elseif ($_SESSION['tipo_usuario'] == 'admin'): ?>
+                            <li class="nav-item">
+                                <a class="nav-link" href="../usuarios/index.php">Usuarios</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="index.php">Alquileres</a>
+                            </li>
+                        <?php endif; ?>
+                        <li class="nav-item">
+                            <a class="nav-link" href="../src/php/cerrar_sesion.php">Cerrar Sesión</a>
+                        </li>
+                    <?php endif; ?>
                 </ul>
             </div>
         </div>

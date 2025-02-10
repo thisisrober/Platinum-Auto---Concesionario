@@ -1,3 +1,7 @@
+<?php
+session_start();
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -15,24 +19,39 @@
 
     <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="#">Platinum Auto</a>
+            <a class="navbar-brand fw-bold" href="../index.php">Platinum Auto</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="../index.html">Inicio</a>
+                        <a class="nav-link" href="../coches/index.php">Coches</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="../coches/index.html">Coches</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="../usuarios/index.html">Usuarios</a>
-                    </li>
-                    <li class="nav-item selected">
-                        <a class="nav-link" href="#">Alquileres</a>
-                    </li>
+                    <?php if (!isset($_SESSION['usuario_id'])): ?>
+                        <li class="nav-item">
+                            <a class="nav-link" href="../registro.php">Registro</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="../login.php">Iniciar Sesión</a>
+                        </li>
+                    <?php else: ?>
+                        <?php if ($_SESSION['tipo_usuario'] == 'vendedor'): ?>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Alquileres</a>
+                            </li>
+                        <?php elseif ($_SESSION['tipo_usuario'] == 'admin'): ?>
+                            <li class="nav-item">
+                                <a class="nav-link" href="../usuarios/index.php">Usuarios</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Alquileres</a>
+                            </li>
+                        <?php endif; ?>
+                        <li class="nav-item">
+                            <a class="nav-link" href="../src/php/cerrar_sesion.php">Cerrar Sesión</a>
+                        </li>
+                    <?php endif; ?>
                 </ul>
             </div>
         </div>

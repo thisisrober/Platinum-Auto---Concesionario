@@ -1,37 +1,7 @@
 <?php
-    $servername = 'localhost';
-    $user = 'root';
-    $password = 'rootroot';
-    $dbname = 'concesionario';
-
-    $conn = mysqli_connect($servername, $user, $password, $dbname);
-
-    if (!$conn) {
-        die('Conexión fallida: ' . mysqli_connect_error());
-    }
-
-    $modelo = trim(strip_tags($_REQUEST['modelo']));
-    $marca = trim(strip_tags($_REQUEST['marca']));
-    $color = trim(strip_tags($_REQUEST['color']));
-    $precio = trim(strip_tags($_REQUEST['precio']));
-    $foto = "";
-
-    if (isset($_FILES['foto']) && $_FILES['foto']['error'] == UPLOAD_ERR_OK) {
-        $uploadDir = '../src/img/uploads/';
-        $uploadFile = $uploadDir . basename($_FILES['foto']['name']);
-
-        if (move_uploaded_file($_FILES['foto']['tmp_name'], $uploadFile)) {
-            $foto = 'src/img/uploads/' . basename($_FILES['foto']['name']);
-        } else {
-            echo "Error al subir la imagen.";
-            exit;
-        }
-    }
-
-    $sql = "INSERT INTO coches (modelo, marca, color, precio, foto) VALUES ('$modelo', '$marca', '$color', '$precio', '$foto')";
-
-    if (mysqli_query($conn, $sql)) {
+session_start();
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -49,41 +19,61 @@
 
     <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="#">Platinum Auto</a>
+            <a class="navbar-brand fw-bold" href="../index.php">Platinum Auto</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="../index.html">Inicio</a>
+                        <a class="nav-link" href="index.php">Coches</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="index.html">Coches</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="../usuarios/index.html">Usuarios</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="../alquileres/index.html">Alquileres</a>
-                    </li>
+                    <?php if (!isset($_SESSION['usuario_id'])): ?>
+                        <li class="nav-item">
+                            <a class="nav-link" href="../registro.php">Registro</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="../login.php">Iniciar Sesión</a>
+                        </li>
+                    <?php else: ?>
+                        <?php if ($_SESSION['tipo_usuario'] == 'vendedor'): ?>
+                            <li class="nav-item">
+                                <a class="nav-link" href="../alquileres/index.php">Alquileres</a>
+                            </li>
+                        <?php elseif ($_SESSION['tipo_usuario'] == 'admin'): ?>
+                            <li class="nav-item">
+                                <a class="nav-link" href="../usuarios/index.php">Usuarios</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="../alquileres/index.php">Alquileres</a>
+                            </li>
+                        <?php endif; ?>
+                        <li class="nav-item">
+                            <a class="nav-link" href="../src/php/cerrar_sesion.php">Cerrar Sesión</a>
+                        </li>
+                    <?php endif; ?>
                 </ul>
             </div>
         </div>
     </nav>
 
     <div class="container my-5" id="center">
-        <h3>¡El coche ha sido añadido!</h3>
-        <a href="index.html">Volver al menú de la categoría</a>
+        <h3>Completa los siguientes campos para añadir un nuevo coche:</h3>
+        <form action="aniadir-1.php" method="POST" enctype="multipart/form-data">
+            <label for="modelo">Marca:</label><br>
+            <input type="text" name="marca" class="form-control mb-2"><br>
+            <label for="modelo">Modelo:</label><br>
+            <input type="text" name="modelo" class="form-control mb-2"><br>
+            <label for="modelo">Color:</label><br>
+            <input type="text" name="color" class="form-control mb-2"><br>
+            <label for="modelo">Precio:</label><br>
+            <input type="text" name="precio" class="form-control mb-2"><br>
+            <label for="modelo">Foto:</label><br>
+            <input type="file" name="foto" class="form-control mb-3" class="form-control mb-2">
+            <input type="submit" value="Añadir">
+        </form>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-<?php
-    } else {
-        echo 'Error al añadir: ' . mysqli_error($conn);
-    }
-
-    mysqli_close($conn);
-?>

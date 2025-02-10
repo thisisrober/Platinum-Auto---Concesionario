@@ -1,14 +1,6 @@
 <?php
-    $servername = 'localhost';
-    $username = 'root';
-    $password = 'rootroot';
-    $dbname = 'concesionario';
-
-    $conn = mysqli_connect($servername, $username, $password, $dbname);
-
-    if (!$conn) {
-        die("Error al conectar a la base de datos: " . mysqli_connect_error());
-    }
+    session_start();
+    require '../src/php/db.php';
 
     $id = $_REQUEST['id'];
     $modelo = $_REQUEST['modelo'];
@@ -57,24 +49,39 @@
 
     <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="#">Platinum Auto</a>
+            <a class="navbar-brand fw-bold" href="../index.php">Platinum Auto</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="../index.html">Inicio</a>
+                        <a class="nav-link" href="index.php">Coches</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="index.html">Coches</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="../usuarios/index.html">Usuarios</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="../alquileres/index.html">Alquileres</a>
-                    </li>
+                    <?php if (!isset($_SESSION['usuario_id'])): ?>
+                        <li class="nav-item">
+                            <a class="nav-link" href="../registro.php">Registro</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="../login.php">Iniciar Sesión</a>
+                        </li>
+                    <?php else: ?>
+                        <?php if ($_SESSION['tipo_usuario'] == 'vendedor'): ?>
+                            <li class="nav-item">
+                                <a class="nav-link" href="../alquileres/index.php">Alquileres</a>
+                            </li>
+                        <?php elseif ($_SESSION['tipo_usuario'] == 'admin'): ?>
+                            <li class="nav-item">
+                                <a class="nav-link" href="../usuarios/index.php">Usuarios</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="../alquileres/index.php">Alquileres</a>
+                            </li>
+                        <?php endif; ?>
+                        <li class="nav-item">
+                            <a class="nav-link" href="../src/php/cerrar_sesion.php">Cerrar Sesión</a>
+                        </li>
+                    <?php endif; ?>
                 </ul>
             </div>
         </div>
@@ -82,7 +89,7 @@
 
     <div class="container my-5" id="center">
         <h3>¡El coche ha sido actualizado!</h3>
-        <a href="index.html">Volver al menú de la categoría</a>
+        <a href="index.php">Volver al menú de la categoría</a>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>

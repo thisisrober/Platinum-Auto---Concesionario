@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $tipo_usuario = $_POST['tipo_usuario'];
     $saldo = 0;
     
-    $stmt = $conn->prepare("INSERT INTO Usuarios (password, nombre, apellidos, dni, saldo, tipo_usuario) VALUES (?, ?, ?, ?, ?, ?)");
+    $stmt = $conn->prepare("INSERT INTO usuarios (password, nombre, apellidos, dni, saldo, tipo_usuario) VALUES (?, ?, ?, ?, ?, ?)");
     $stmt->bind_param("ssssis", $password, $nombre, $apellidos, $dni, $saldo, $tipo_usuario);
     
     if ($stmt->execute()) {

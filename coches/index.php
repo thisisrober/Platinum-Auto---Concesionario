@@ -1,5 +1,6 @@
 <?php
 session_start();
+require '../src/php/db.php';
 ?>
 
 <!DOCTYPE html>
@@ -63,28 +64,35 @@ session_start();
             <form action="listar.php" method="POST">
                 <input type="submit" value="Listar">
             </form>
-            <form action="buscar.html" method="POST">
+            <form action="buscar.php" method="POST">
                 <input type="submit" value="Buscar">
             </form>
             <?php else: ?>
                 <?php if ($_SESSION['tipo_usuario'] == 'vendedor'): ?>
-                    <form action="aniadir.html" method="POST">
+                    <form action="aniadir.php" method="POST">
                         <input type="submit" value="Añadir">
                     </form>
                     <form action="listar.php" method="POST">
                         <input type="submit" value="Listar">
                     </form>
-                    <form action="buscar.html" method="POST">
+                    <form action="buscar.php" method="POST">
+                        <input type="submit" value="Buscar">
+                    </form>
+                <?php elseif ($_SESSION['tipo_usuario'] == 'comprador'): ?>
+                    <form action="listar.php" method="POST">
+                        <input type="submit" value="Listar">
+                    </form>
+                    <form action="buscar.php" method="POST">
                         <input type="submit" value="Buscar">
                     </form>
                 <?php elseif ($_SESSION['tipo_usuario'] == 'admin'): ?>
-                    <form action="aniadir.html" method="POST">
+                    <form action="aniadir.php" method="POST">
                         <input type="submit" value="Añadir">
                     </form>
                     <form action="listar.php" method="POST">
                         <input type="submit" value="Listar">
                     </form>
-                    <form action="buscar.html" method="POST">
+                    <form action="buscar.php" method="POST">
                         <input type="submit" value="Buscar">
                     </form>
                     <form action="modificar.php" method="POST">
