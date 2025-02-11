@@ -36,7 +36,11 @@ session_start();
                             <a class="nav-link" href="../login.php">Iniciar Sesión</a>
                         </li>
                     <?php else: ?>
-                        <?php if ($_SESSION['tipo_usuario'] == 'vendedor'): ?>
+                        <?php if ($_SESSION['tipo_usuario'] == 'comprador'): ?>
+                            <li class="nav-item">
+                                <a class="nav-link" href="../perfil.php">Mi perfil</a>
+                            </li>
+                        <?php elseif ($_SESSION['tipo_usuario'] == 'vendedor'): ?>
                             <li class="nav-item">
                                 <a class="nav-link" href="../alquileres/index.php">Alquileres</a>
                             </li>

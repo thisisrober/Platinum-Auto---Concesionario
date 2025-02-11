@@ -59,12 +59,18 @@ session_start();
 
     <div class="container my-5" id="center">
         <h3>Seleccione una opción:</h3>
-        <form action="listar.php" method="POST">
-            <input type="submit" value="Listar">
-        </form>
-        <form action="borrar.php" method="POST">
-            <input type="submit" value="Borrar">
-        </form>
+            <?php if ($_SESSION['tipo_usuario'] == 'vendedor'): ?>
+                <form action="listar.php" method="POST">
+                    <input type="submit" value="Listar">
+                </form>
+            <?php elseif ($_SESSION['tipo_usuario'] == 'admin'): ?>
+                <form action="listar.php" method="POST">
+                    <input type="submit" value="Listar">
+                </form>
+                <form action="borrar.php" method="POST">
+                    <input type="submit" value="Borrar">
+                </form>
+            <?php endif; ?>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>

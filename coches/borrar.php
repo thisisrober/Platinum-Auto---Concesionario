@@ -1,5 +1,12 @@
 <?php
 session_start();
+
+if (!isset($_SESSION['usuario_id'])) {
+    header("Location: login.php");
+    exit();
+}
+
+$id_usuario = $_SESSION['usuario_id'];
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -65,7 +72,7 @@ session_start();
                 <?php
                 require '../src/php/db.php';
 
-                $sql = "SELECT id_coche, modelo, marca FROM coches";
+                $sql = "SELECT id_coche, modelo, marca FROM coches WHERE id_vendedor = $id_usuario";
                 $result = mysqli_query($conn, $sql);
 
                 if (mysqli_num_rows($result) > 0) {

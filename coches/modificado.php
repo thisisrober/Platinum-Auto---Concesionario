@@ -7,7 +7,6 @@
     $marca = $_REQUEST['marca'];
     $color = $_REQUEST['color'];
     $precio = $_REQUEST['precio'];
-    $alquilado = $_REQUEST['alquilado'];
     $foto = "";
 
     if (isset($_FILES['foto']) && $_FILES['foto']['error'] == UPLOAD_ERR_OK) {
@@ -28,7 +27,7 @@
         }
     }
 
-    $sql = "UPDATE coches SET modelo='$modelo', marca='$marca', color='$color', precio='$precio', alquilado='$alquilado', foto='$foto' WHERE id_coche ='$id'";
+    $sql = "UPDATE coches SET modelo='$modelo', marca='$marca', color='$color', precio='$precio', foto='$foto' WHERE id_coche ='$id'";
 
     if (mysqli_query($conn, $sql)) {
 ?>

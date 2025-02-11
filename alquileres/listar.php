@@ -2,10 +2,18 @@
 session_start();
 require '../src/php/db.php';
 
+if (!isset($_SESSION['usuario_id'])) {
+    header("Location: login.php");
+    exit();
+}
+
+$id_usuario = $_SESSION['usuario_id'];
+
 $sql = "SELECT a.id_alquiler, u.nombre, u.apellidos, c.modelo, c.marca, a.prestado, a.devuelto 
         FROM alquileres a 
         JOIN usuarios u ON a.id_usuario = u.id_usuario 
-        JOIN coches c ON a.id_coche = c.id_coche";
+        JOIN coches c ON a.id_coche = c.id_coche
+        WHERE id_vendedor = $id_usuario";
 $consulta = mysqli_query($conn, $sql);
 $nfilas = mysqli_num_rows($consulta);
 ?>

@@ -10,7 +10,7 @@ if (!isset($_SESSION['usuario_id'])) {
 $id_usuario = $_SESSION['usuario_id'];
 $usuario_tipo = $_SESSION['tipo_usuario'];
 
-$sql = "SELECT * FROM coches";
+$sql = "SELECT * FROM coches WHERE id_vendedor = '$id_usuario' OR '$usuario_tipo' = 'admin'";
 $result = mysqli_query($conn, $sql);
 $coches = [];
 if (mysqli_num_rows($result) > 0) {
@@ -97,7 +97,7 @@ if (isset($_POST['id'])) {
             <select name="id" class="form-select mb-3">
                 <option value="">Seleccione un coche</option>
                 <?php foreach ($coches as $coche): ?>
-                    <option value="<?php echo $coche['id_coche']; ?>" <?php echo isset($selectedCar) && $selectedCar['id_coche'] == $coche['id_coche'] ? 'selected' : ''; ?>>
+                    <option value="<?php echo $coche['id_coche']; ?>" <?php echo isset($cocheSelecc) && $cocheSelecc['id_coche'] == $coche['id_coche'] ? 'selected' : ''; ?>>
                         <?php echo $coche['id_coche'] . ' | ' . $coche['marca'] . ', ' . $coche['modelo']; ?>
                     </option>
                 <?php endforeach; ?>
@@ -105,32 +105,31 @@ if (isset($_POST['id'])) {
             <button type="submit" class="btn btn-primary">Seleccionar</button>
         </form>
 
-        <?php if ($selectedCar): ?>
-            <h3>Modificar coche:</h3>
-            <form action="modificado.php" method="POST" enctype="multipart/form-data">
-                <label>ID del coche:</label>
-                <input type="text" name="id" readonly value="<?php echo $selectedCar['id_coche']; ?>" class="form-control mb-2">
-                <label>Modelo:</label>
-                <input type="text" name="modelo" value="<?php echo $selectedCar['modelo']; ?>" class="form-control mb-2">
-                <label>Marca:</label>
-                <input type="text" name="marca" value="<?php echo $selectedCar['marca']; ?>" class="form-control mb-2">
-                <label>Color:</label>
-                <input type="text" name="color" value="<?php echo $selectedCar['color']; ?>" class="form-control mb-2">
-                <label>Precio:</label>
-                <input type="text" name="precio" value="<?php echo $selectedCar['precio']; ?>" class="form-control mb-2">
-                <label>¿Está alquilado?</label><br>
-                <input type="radio" id="alquilado_si" name="alquilado" value="1" <?php echo $selectedCar['alquilado'] == 1 ? 'checked' : ''; ?>>
-                <label for="alquilado_si">Sí</label>
-                <input type="radio" id="alquilado_no" name="alquilado" value="0" <?php echo $selectedCar['alquilado'] == 0 ? 'checked' : ''; ?>>
-                <label for="alquilado_no">No</label><br><br>
-                <label>Foto:</label>
-                <input type="file" name="foto" class="form-control mb-3">
+        <?php if ($cocheSelecc): ?>
+            <h3>Modificar coche</h3>
+            <form id="modificar-form" method="POST" enctype="multipart/form-data" action="modificado.php">
+                <img id="preview" src="../<?php echo $cocheSelecc['foto']; ?>" alt="Foto actual del coche" class="img-fluid mb-3" style="width: 600px; border-radius: 5px;"><br>
+                <span style="display: flex; justify-content: center; align-items: center;">
+                    <input type="file" name="foto" class="form-control mb-3" onchange="document.getElementById('preview').src = window.URL.createObjectURL(this.files[0])" style="width: 400px;">
+                </span>
+                <span style="display: flex; text-align: center; justify-content: center; align-items: center; flex-direction: column;">
+                    <label>ID del coche:</label>
+                    <input type="text" name="id" readonly value="<?php echo $cocheSelecc['id_coche']; ?>" class="form-control mb-2" style="text-align: center;">
+                    <label>Marca:</label>
+                    <input type="text" name="marca" value="<?php echo $cocheSelecc['marca']; ?>" class="form-control mb-2" style="text-align: center;">
+                    <label>Modelo:</label>
+                    <input type="text" name="modelo" value="<?php echo $cocheSelecc['modelo']; ?>" class="form-control mb-2" style="text-align: center;">
+                    <label>Color:</label>
+                    <input type="text" name="color" value="<?php echo $cocheSelecc['color']; ?>" class="form-control mb-2" style="text-align: center;">
+                    <label>Precio:</label>
+                    <input type="text" name="precio" value="<?php echo $cocheSelecc['precio']; ?>" class="form-control mb-2" style="text-align: center;">
+                </span>
                 <button type="submit" class="btn btn-success">Confirmar cambios</button>
             </form>
         <?php endif; ?>
 
-        <?php if (isset($_POST['id']) && !$selectedCar): ?>
-            <p class="text-danger">No se encontró el coche con el ID proporcionado.</p>
+        <?php if (isset($_POST['id']) && !$cocheSelecc): ?>
+            <p class="text-danger">No se encontró el coche con el ID proporcionado o no tienes permisos para modificar este coche.</p>
         <?php endif; ?>
     </div>
 
