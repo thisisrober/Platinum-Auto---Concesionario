@@ -1,0 +1,69 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f7f8fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+.container {
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    max-width: 600px;
+    width: 100%;
+    text-align: center;
+}
+h3, h4 {
+    color: #3a3a3a;
+}
+.row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.btn-success {
+    background-color: #6772e5;
+    border-color: #6772e5;
+    padding: 12px 30px;
+    font-size: 16px;
+    border-radius: 8px;
+}
+.btn-success:hover {
+    background-color: #5469d4;
+    border-color: #5469d4;
+}
+.stripe-logo {
+    width: 200px;
+    margin-top: 30px;
+}
+.footer {
+    text-align: center;
+    margin-top: 30px;
+    font-size: 14px;
+    color: #777;
+}
+.footer img {
+    width: 120px;
+    margin-top: 10px;
+}
+.header-link {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}
+#payment-info {
+    display: block;
+}
+#payment-confirmation {
+    display: none;
+    color: #28a745;
+}
+.payment-icon {
+    font-size: 50px;
+}
+.payment-confirmation-text {
+    margin-top: 20px;
+    font-size: 20px;
+}

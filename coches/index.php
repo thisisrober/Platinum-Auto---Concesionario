@@ -78,6 +78,12 @@ require '../src/php/db.php';
                     <form action="buscar.php" method="POST">
                         <input type="submit" value="Buscar">
                     </form>
+                    <form action="modificar.php" method="POST">
+                        <input type="submit" value="Modificar">
+                    </form>
+                    <form action="borrar.php" method="POST">
+                        <input type="submit" value="Borrar">
+                    </form>
                 <?php elseif ($_SESSION['tipo_usuario'] == 'comprador'): ?>
                     <form action="listar.php" method="POST">
                         <input type="submit" value="Listar">

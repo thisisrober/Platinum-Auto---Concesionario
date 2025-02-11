@@ -1,25 +1,39 @@
 <?php
-    session_start();
-    require '../src/php/db.php';
+session_start();
+require '../src/php/db.php';
 
-    $sql = "SELECT * FROM coches";
-    $result = mysqli_query($conn, $sql);
-    $coches = [];
-    if (mysqli_num_rows($result) > 0) {
-        while ($row = mysqli_fetch_assoc($result)) {
-            $coches[] = $row;
-        }
+if (!isset($_SESSION['usuario_id'])) {
+    header("Location: login.php");
+    exit();
+}
+
+$id_usuario = $_SESSION['usuario_id'];
+$usuario_tipo = $_SESSION['tipo_usuario'];
+
+$sql = "SELECT * FROM coches";
+$result = mysqli_query($conn, $sql);
+$coches = [];
+if (mysqli_num_rows($result) > 0) {
+    while ($row = mysqli_fetch_assoc($result)) {
+        $coches[] = $row;
     }
+}
 
-    $selectedCar = null;
-    if (isset($_POST['id'])) {
-        $id = $_POST['id'];
+$cocheSelecc = null;
+if (isset($_POST['id'])) {
+    $id = $_POST['id'];
+    
+    if ($usuario_tipo == 'vendedor') {
+        $sql = "SELECT * FROM coches WHERE id_coche = '$id' AND id_vendedor = '$id_usuario'";
+    } else {
         $sql = "SELECT * FROM coches WHERE id_coche = '$id'";
-        $result = mysqli_query($conn, $sql);
-        if (mysqli_num_rows($result) == 1) {
-            $selectedCar = mysqli_fetch_assoc($result);
-        }
     }
+
+    $result = mysqli_query($conn, $sql);
+    if (mysqli_num_rows($result) == 1) {
+        $cocheSelecc = mysqli_fetch_assoc($result);
+    }
+}
 ?>
 
 <!DOCTYPE html>
