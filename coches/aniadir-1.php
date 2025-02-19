@@ -2,6 +2,13 @@
     session_start();
     require '../src/php/db.php';
 
+    if (!isset($_SESSION['usuario_id'])) {
+        header("Location: login.php");
+        exit();
+    }
+    
+    $id_usuario = $_SESSION['usuario_id'];
+
     $modelo = trim(strip_tags($_REQUEST['modelo']));
     $marca = trim(strip_tags($_REQUEST['marca']));
     $color = trim(strip_tags($_REQUEST['color']));
@@ -20,7 +27,7 @@
         }
     }
 
-    $sql = "INSERT INTO coches (modelo, marca, color, precio, foto) VALUES ('$modelo', '$marca', '$color', '$precio', '$foto')";
+    $sql = "INSERT INTO coches (id_vendedor, modelo, marca, color, precio, foto) VALUES ('$id_usuario', '$modelo', '$marca', '$color', '$precio', '$foto')";
 
     if (mysqli_query($conn, $sql)) {
 ?>
