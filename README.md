@@ -1,6 +1,6 @@
 # 🚗 Platinum Auto - Concesionario Online
 
-[Pantalla principal](https://prnt.sc/4iber8x4VeD7)
+![Pantalla principal](https://prnt.sc/4iber8x4VeD7)
 
 **Platinum Auto** es una aplicación web de concesionario de coches desarrollada en **PHP** y **MySQL**, con una interfaz moderna utilizando **Bootstrap**. Permite gestionar vehículos, alquileres y usuarios con diferentes roles.
 
@@ -31,7 +31,7 @@ cd Pr-ctica-PHP-MYSQL
 2. Crea una base de datos con el nombre concesionario.
 3. Importa el archivo database/concesionario.sql.
 
-4. [Base de datos SQL](https://prnt.sc/tuLTKUkyVdut)
+![Base de datos SQL](https://prnt.sc/tuLTKUkyVdut)
 
 ### 🔹 4. Configurar la conexión a la base de datos
 Edita el archivo src/php/db.php y asegúrate de que los datos de conexión coinciden con tu entorno:
@@ -52,7 +52,7 @@ Para probar la plataforma, puedes usar los siguientes usuarios:
 
 Las contraseñas constan como encriptadas en la base de datos.
 
-[Usuarios base de datos](https://prnt.sc/aSM-fzd9RQ3l)
+![Usuarios base de datos](https://prnt.sc/aSM-fzd9RQ3l)
 
 #🚀 Funcionalidades
 ###🔹 Usuarios
@@ -65,7 +65,7 @@ Las contraseñas constan como encriptadas en la base de datos.
 - Posibilidad de agregar, modificar y eliminar coches (según rol).
 - Sistema de búsqueda y filtrado.
 
-[Listado de coches](https://prnt.sc/jOZZBXNbuYkH)
+![Listado de coches](https://prnt.sc/jOZZBXNbuYkH)
 
 ###🔹 Alquileres
 - Los vendedores solo pueden ver los alquileres de sus propios coches.
