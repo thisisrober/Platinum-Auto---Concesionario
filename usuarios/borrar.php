@@ -1,3 +1,20 @@
+<?php
+session_start();
+require '../src/php/db.php';
+
+if (!isset($_SESSION['usuario_id'])) {
+    header("Location: ../login.php");
+    exit();
+}
+
+// Seguridad de acceso: si el usuario no es tipo administrador, le redirigirá a la página principal.
+if ($_SESSION['tipo_usuario'] !== 'admin') {
+    header("Location: ../index.php");
+    exit();
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -15,24 +32,43 @@
 
     <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="#">Platinum Auto</a>
+            <a class="navbar-brand fw-bold" href="../index.php">Platinum Auto</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="../index.html">Inicio</a>
+                        <a class="nav-link" href="../coches/index.php">Coches</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="../coches/index.html">Coches</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="index.html">Usuarios</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="../alquileres/index.html">Alquileres</a>
-                    </li>
+                    <?php if (!isset($_SESSION['usuario_id'])): ?>
+                        <li class="nav-item">
+                            <a class="nav-link" href="../registro.php">Registro</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="../login.php">Iniciar Sesión</a>
+                        </li>
+                    <?php else: ?>
+                        <?php if ($_SESSION['tipo_usuario'] == 'comprador'): ?>
+                            <li class="nav-item">
+                                <a class="nav-link" href="../perfil.php">Mi perfil</a>
+                            </li>
+                        <?php elseif ($_SESSION['tipo_usuario'] == 'vendedor'): ?>
+                            <li class="nav-item">
+                                <a class="nav-link" href="../alquileres/index.php">Alquileres</a>
+                            </li>
+                        <?php elseif ($_SESSION['tipo_usuario'] == 'admin'): ?>
+                            <li class="nav-item">
+                                <a class="nav-link" href="index.php">Usuarios</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="../alquileres/index.php">Alquileres</a>
+                            </li>
+                        <?php endif; ?>
+                        <li class="nav-item">
+                            <a class="nav-link" href="../src/php/cerrar_sesion.php">Cerrar Sesión</a>
+                        </li>
+                    <?php endif; ?>
                 </ul>
             </div>
         </div>
@@ -45,17 +81,6 @@
             <select name="id_coche" class="form-select mb-3">
                 <option value="">-- Seleccione --</option>
                 <?php
-                $servername = 'localhost';
-                $username = 'root';
-                $password = 'rootroot';
-                $dbname = 'concesionario';
-
-                $conn = mysqli_connect($servername, $username, $password, $dbname);
-
-                if (!$conn) {
-                    die('Error al conectar con la base de datos: ' . mysqli_connect_error());
-                }
-
                 $sql = "SELECT id_usuario, nombre, apellidos FROM usuarios";
                 $result = mysqli_query($conn, $sql);
 

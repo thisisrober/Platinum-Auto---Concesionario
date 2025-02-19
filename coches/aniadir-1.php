@@ -1,35 +1,41 @@
 <?php
-    session_start();
-    require '../src/php/db.php';
+session_start();
+require '../src/php/db.php';
 
-    if (!isset($_SESSION['usuario_id'])) {
-        header("Location: login.php");
-        exit();
+if (!isset($_SESSION['usuario_id'])) {
+    header("Location: ../login.php");
+    exit();
+}
+
+// Seguridad de acceso: si el usuario no es tipo vendedor, le redirigirá a la página principal.
+if ($_SESSION['tipo_usuario'] !== 'vendedor') {
+    header("Location: ../index.php");
+    exit();
+}
+
+$id_usuario = $_SESSION['usuario_id'];
+
+$modelo = trim(strip_tags($_REQUEST['modelo']));
+$marca = trim(strip_tags($_REQUEST['marca']));
+$color = trim(strip_tags($_REQUEST['color']));
+$precio = trim(strip_tags($_REQUEST['precio']));
+$foto = "";
+
+if (isset($_FILES['foto']) && $_FILES['foto']['error'] == UPLOAD_ERR_OK) {
+    $uploadDir = '../src/img/uploads/';
+    $uploadFile = $uploadDir . basename($_FILES['foto']['name']);
+
+    if (move_uploaded_file($_FILES['foto']['tmp_name'], $uploadFile)) {
+        $foto = 'src/img/uploads/' . basename($_FILES['foto']['name']);
+    } else {
+        echo "Error al subir la imagen.";
+        exit;
     }
-    
-    $id_usuario = $_SESSION['usuario_id'];
+}
 
-    $modelo = trim(strip_tags($_REQUEST['modelo']));
-    $marca = trim(strip_tags($_REQUEST['marca']));
-    $color = trim(strip_tags($_REQUEST['color']));
-    $precio = trim(strip_tags($_REQUEST['precio']));
-    $foto = "";
+$sql = "INSERT INTO coches (id_vendedor, modelo, marca, color, precio, foto) VALUES ('$id_usuario', '$modelo', '$marca', '$color', '$precio', '$foto')";
 
-    if (isset($_FILES['foto']) && $_FILES['foto']['error'] == UPLOAD_ERR_OK) {
-        $uploadDir = '../src/img/uploads/';
-        $uploadFile = $uploadDir . basename($_FILES['foto']['name']);
-
-        if (move_uploaded_file($_FILES['foto']['tmp_name'], $uploadFile)) {
-            $foto = 'src/img/uploads/' . basename($_FILES['foto']['name']);
-        } else {
-            echo "Error al subir la imagen.";
-            exit;
-        }
-    }
-
-    $sql = "INSERT INTO coches (id_vendedor, modelo, marca, color, precio, foto) VALUES ('$id_usuario', '$modelo', '$marca', '$color', '$precio', '$foto')";
-
-    if (mysqli_query($conn, $sql)) {
+if (mysqli_query($conn, $sql)) {
 ?>
 <!DOCTYPE html>
 <html lang="es">

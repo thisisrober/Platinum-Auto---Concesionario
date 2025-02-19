@@ -64,10 +64,10 @@ session_start();
     <div class="container my-5" id="center">
         <h3>Buscar coches:</h3>
         <form action="buscar-1.php" method="GET">
-            <label for="modelo">Modelo:</label>
-            <input type="text" name="modelo" class="form-control mb-2" placeholder="Ejemplo: 3008">
             <label for="marca">Marca:</label>
             <input type="text" name="marca" class="form-control mb-2" placeholder="Ejemplo: Peugeot">
+            <label for="modelo">Modelo:</label>
+            <input type="text" name="modelo" class="form-control mb-2" placeholder="Ejemplo: 3008">
             <label for="color">Color:</label>
             <input type="text" name="color" class="form-control mb-2" placeholder="Ejemplo: Blanco">
             <label for="precio_min">Precio mínimo:</label>

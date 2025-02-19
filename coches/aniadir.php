@@ -2,7 +2,13 @@
 session_start();
 
 if (!isset($_SESSION['usuario_id'])) {
-    header("Location: login.php");
+    header("Location: ../login.php");
+    exit();
+}
+
+// Seguridad de acceso: si el usuario no es tipo vendedor, le redirigirá a la página principal.
+if ($_SESSION['tipo_usuario'] !== 'vendedor') {
+    header("Location: ../index.php");
     exit();
 }
 ?>

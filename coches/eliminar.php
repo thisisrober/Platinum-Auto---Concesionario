@@ -2,6 +2,17 @@
 session_start();
 require '../src/php/db.php';
 
+if (!isset($_SESSION['usuario_id'])) {
+    header("Location: ../login.php");
+    exit();
+}
+
+// Seguridad de acceso: si el usuario no es tipo vendedor, le redirigirá a la página principal.
+if ($_SESSION['tipo_usuario'] !== 'vendedor') {
+    header("Location: ../index.php");
+    exit();
+}
+
 if (isset($_POST['id_coche']) && !empty($_POST['id_coche'])) {
     $id_coche = intval($_POST['id_coche']);
 

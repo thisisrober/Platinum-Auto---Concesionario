@@ -1,35 +1,46 @@
 <?php
-    session_start();
-    require '../src/php/db.php';
+session_start();
+require '../src/php/db.php';
 
-    $id = $_REQUEST['id'];
-    $modelo = $_REQUEST['modelo'];
-    $marca = $_REQUEST['marca'];
-    $color = $_REQUEST['color'];
-    $precio = $_REQUEST['precio'];
-    $foto = "";
+if (!isset($_SESSION['usuario_id'])) {
+    header("Location: ../login.php");
+    exit();
+}
 
-    if (isset($_FILES['foto']) && $_FILES['foto']['error'] == UPLOAD_ERR_OK) {
-        $uploadDir = '../src/img/uploads/';
-        $uploadFile = $uploadDir . basename($_FILES['foto']['name']);
+// Seguridad de acceso: si el usuario no es tipo vendedor, le redirigirá a la página principal.
+if ($_SESSION['tipo_usuario'] !== 'vendedor') {
+    header("Location: ../index.php");
+    exit();
+}
 
-        if (move_uploaded_file($_FILES['foto']['tmp_name'], $uploadFile)) {
-            $foto = 'src/img/uploads/' . basename($_FILES['foto']['name']);
-        } else {
-            echo "Error al subir la imagen.";
-            exit;
-        }
+$id = $_REQUEST['id'];
+$modelo = $_REQUEST['modelo'];
+$marca = $_REQUEST['marca'];
+$color = $_REQUEST['color'];
+$precio = $_REQUEST['precio'];
+$foto = "";
+
+if (isset($_FILES['foto']) && $_FILES['foto']['error'] == UPLOAD_ERR_OK) {
+    $uploadDir = '../src/img/uploads/';
+    $uploadFile = $uploadDir . basename($_FILES['foto']['name']);
+
+    if (move_uploaded_file($_FILES['foto']['tmp_name'], $uploadFile)) {
+        $foto = 'src/img/uploads/' . basename($_FILES['foto']['name']);
     } else {
-        $query = "SELECT foto FROM coches WHERE id_coche = '$id'";
-        $result = mysqli_query($conn, $query);
-        if ($row = mysqli_fetch_assoc($result)) {
-            $foto = $row['foto'];
-        }
+        echo "Error al subir la imagen.";
+        exit;
     }
+} else {
+    $query = "SELECT foto FROM coches WHERE id_coche = '$id'";
+    $result = mysqli_query($conn, $query);
+    if ($row = mysqli_fetch_assoc($result)) {
+        $foto = $row['foto'];
+    }
+}
 
-    $sql = "UPDATE coches SET modelo='$modelo', marca='$marca', color='$color', precio='$precio', foto='$foto' WHERE id_coche ='$id'";
+$sql = "UPDATE coches SET modelo='$modelo', marca='$marca', color='$color', precio='$precio', foto='$foto' WHERE id_coche ='$id'";
 
-    if (mysqli_query($conn, $sql)) {
+if (mysqli_query($conn, $sql)) {
 ?>
 <!DOCTYPE html>
 <html lang="es">
