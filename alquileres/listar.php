@@ -7,19 +7,28 @@ if (!isset($_SESSION['usuario_id'])) {
     exit();
 }
 
-// Seguridad de acceso: si el usuario no es tipo vendedor, le redirigirá a la página principal.
-if ($_SESSION['tipo_usuario'] !== 'vendedor') {
+// Seguridad de acceso: si el usuario no es tipo vendedor o administrador, le redirigirá a la página principal.
+if ($_SESSION['tipo_usuario'] !== 'vendedor' && $_SESSION['tipo_usuario'] !== 'admin') {
     header("Location: ../index.php");
     exit();
 }
 
 $id_usuario = $_SESSION['usuario_id'];
+$tipo_usuario = $_SESSION['tipo_usuario'];
 
-$sql = "SELECT a.id_alquiler, u.nombre, u.apellidos, c.modelo, c.marca, a.prestado, a.devuelto 
-        FROM alquileres a 
-        JOIN usuarios u ON a.id_usuario = u.id_usuario 
-        JOIN coches c ON a.id_coche = c.id_coche
-        WHERE id_vendedor = $id_usuario";
+if ($tipo_usuario === 'admin') {
+    $sql = "SELECT a.id_alquiler, u.nombre, u.apellidos, c.modelo, c.marca, a.prestado, a.devuelto 
+            FROM alquileres a 
+            JOIN usuarios u ON a.id_usuario = u.id_usuario 
+            JOIN coches c ON a.id_coche = c.id_coche";
+} else {
+    $sql = "SELECT a.id_alquiler, u.nombre, u.apellidos, c.modelo, c.marca, a.prestado, a.devuelto 
+            FROM alquileres a 
+            JOIN usuarios u ON a.id_usuario = u.id_usuario 
+            JOIN coches c ON a.id_coche = c.id_coche
+            WHERE c.id_vendedor = $id_usuario";
+}
+
 $consulta = mysqli_query($conn, $sql);
 $nfilas = mysqli_num_rows($consulta);
 ?>

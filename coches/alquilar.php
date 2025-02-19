@@ -7,12 +7,6 @@ if (!isset($_SESSION['usuario_id'])) {
     exit();
 }
 
-// Seguridad de acceso: si el usuario no es tipo vendedor, le redirigirá a la página principal.
-if ($_SESSION['tipo_usuario'] !== 'vendedor') {
-    header("Location: ../index.php");
-    exit();
-}
-
 $id_coche = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
 if ($id_coche <= 0) {

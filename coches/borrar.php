@@ -6,8 +6,8 @@ if (!isset($_SESSION['usuario_id'])) {
     exit();
 }
 
-// Seguridad de acceso: si el usuario no es tipo vendedor, le redirigirá a la página principal.
-if ($_SESSION['tipo_usuario'] !== 'vendedor') {
+// Seguridad de acceso: si el usuario no es tipo vendedor o administrador, le redirigirá a la página principal.
+if ($_SESSION['tipo_usuario'] !== 'vendedor' && $_SESSION['tipo_usuario'] !== 'admin') {
     header("Location: ../index.php");
     exit();
 }
@@ -78,7 +78,15 @@ $id_usuario = $_SESSION['usuario_id'];
                 <?php
                 require '../src/php/db.php';
 
-                $sql = "SELECT id_coche, modelo, marca FROM coches WHERE id_vendedor = $id_usuario";
+                $id_usuario = $_SESSION['usuario_id'];
+                $tipo_usuario = $_SESSION['tipo_usuario'];
+
+                if ($tipo_usuario === 'admin') {
+                    $sql = "SELECT id_coche, modelo, marca FROM coches";
+                } else {
+                    $sql = "SELECT id_coche, modelo, marca FROM coches WHERE id_vendedor = $id_usuario";
+                }
+
                 $result = mysqli_query($conn, $sql);
 
                 if (mysqli_num_rows($result) > 0) {

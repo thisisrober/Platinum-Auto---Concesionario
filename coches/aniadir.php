@@ -6,11 +6,12 @@ if (!isset($_SESSION['usuario_id'])) {
     exit();
 }
 
-// Seguridad de acceso: si el usuario no es tipo vendedor, le redirigirá a la página principal.
-if ($_SESSION['tipo_usuario'] !== 'vendedor') {
+// Seguridad de acceso: si el usuario no es tipo vendedor o administrador, le redirigirá a la página principal.
+if ($_SESSION['tipo_usuario'] !== 'vendedor' && $_SESSION['tipo_usuario'] !== 'admin') {
     header("Location: ../index.php");
     exit();
 }
+
 ?>
 
 <!DOCTYPE html>

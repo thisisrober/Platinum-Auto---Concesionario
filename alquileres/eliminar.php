@@ -7,8 +7,8 @@ if (!isset($_SESSION['usuario_id'])) {
     exit();
 }
 
-// Seguridad de acceso: si el usuario no es tipo vendedor, le redirigirá a la página principal.
-if ($_SESSION['tipo_usuario'] !== 'vendedor') {
+// Seguridad de acceso: si el usuario no es tipo vendedor o administrador, le redirigirá a la página principal.
+if ($_SESSION['tipo_usuario'] !== 'vendedor' && $_SESSION['tipo_usuario'] !== 'admin') {
     header("Location: ../index.php");
     exit();
 }
@@ -16,8 +16,17 @@ if ($_SESSION['tipo_usuario'] !== 'vendedor') {
 if (isset($_POST['id_alquiler']) && !empty($_POST['id_alquiler'])) {
     $id_alquiler = intval($_POST['id_alquiler']);
 
-    $sql = "DELETE FROM Alquileres WHERE id_alquiler = '$id_alquiler'";
-    if (mysqli_query($conn, $sql)) {
+    $sql_get_coche = "SELECT id_coche FROM alquileres WHERE id_alquiler = '$id_alquiler'";
+    $result = mysqli_query($conn, $sql_get_coche);
+
+    if ($row = mysqli_fetch_assoc($result)) {
+        $id_coche = $row['id_coche'];
+
+        $sql2 = "UPDATE coches SET alquilado = 0 WHERE id_coche = '$id_coche'";
+        mysqli_query($conn, $sql2);
+
+        $sql = "DELETE FROM alquileres WHERE id_alquiler = '$id_alquiler'";
+        if (mysqli_query($conn, $sql)) {
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -72,16 +81,19 @@ if (isset($_POST['id_alquiler']) && !empty($_POST['id_alquiler'])) {
     </nav>
 
     <div class="container my-5" id="center">
-        <h3>¡El alquiler ha sido eliminado!</h3>
-        <a href="index.html">Volver al menú de la categoría</a>
+        <h3>¡El alquiler ha sido eliminado correctamente!</h3>
+        <a href="index.php">Volver al listado de alquileres</a>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
 <?php
+        } else {
+            echo "<h3>Error al eliminar el alquiler: " . mysqli_error($conn) . "</h3>";
+        }
     } else {
-        echo "<h3>Error al eliminar el alquiler: " . mysqli_error($conn) . "</h3>";
+        echo "<h3>No se encontró el alquiler especificado.</h3>";
     }
 } else {
     echo "<h3>No se seleccionó ningún alquiler para eliminar.</h3>";
