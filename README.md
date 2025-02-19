@@ -31,7 +31,7 @@ cd Pr-ctica-PHP-MYSQL
 2. Crea una base de datos con el nombre concesionario.
 3. Importa el archivo database/concesionario.sql.
 
-4. [Base de datos SQL](https://prnt.sc/tuLTKUkyVdut)
+[Base de datos SQL](https://prnt.sc/tuLTKUkyVdut)
 
 ### 🔹 4. Configurar la conexión a la base de datos
 Edita el archivo src/php/db.php y asegúrate de que los datos de conexión coinciden con tu entorno:
@@ -43,7 +43,9 @@ $database = "concesionario";
 $conn = mysqli_connect($host, $user, $password, $database);
 ```
 
-#👤 Usuarios de prueba
+---
+
+## 👤 Usuarios de prueba
 Para probar la plataforma, puedes usar los siguientes usuarios:
 
 00000000C	- Usuario Comprador - Contraseña: Ab123456
@@ -54,28 +56,28 @@ Las contraseñas constan como encriptadas en la base de datos.
 
 [Usuarios base de datos](https://prnt.sc/aSM-fzd9RQ3l)
 
-#🚀 Funcionalidades
-###🔹 Usuarios
+# 🚀 Funcionalidades
+### 🔹 Usuarios
 - Comprador: Puede ver los coches disponibles en el concesionario.
 - Vendedor: Puede gestionar los coches que ha publicado, además de ver los alquileres de sus coches.
 - Administrador: Tiene control total sobre los usuarios, los coches y los alquileres.
 
-###🔹 Coches
+### 🔹 Coches
 - Listado de coches disponibles.
 - Posibilidad de agregar, modificar y eliminar coches (según rol).
 - Sistema de búsqueda y filtrado.
 
 [Listado de coches](https://prnt.sc/jOZZBXNbuYkH)
 
-###🔹 Alquileres
+### 🔹 Alquileres
 - Los vendedores solo pueden ver los alquileres de sus propios coches.
 - Los administradores pueden ver todos los alquileres.
 - Opción de finalizar un alquiler y marcar el coche como disponible.
 
-###🖥️ Uso del sistema
+### 🖥️ Uso del sistema
 - Inicia sesión con uno de los usuarios de prueba.
 - Explora el sistema y accede a las funciones según tu rol.
 - Prueba las funciones de añadir/modificar coches, gestionar alquileres y cambiar entre diferentes usuarios.
 
-#📞 Contacto
-Si tienes alguna pregunta o sugerencia, puedes contactarme en: 🔗 https://thisisrober.es
+# 📞 Contacto
+Si tienes alguna pregunta o sugerencia, puedes contactarme en: 🔗 https://thisisrober.es/
