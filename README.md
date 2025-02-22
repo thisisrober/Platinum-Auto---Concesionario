@@ -20,8 +20,8 @@
 
 ### 🔹 2. Clonar el repositorio
 ```sh
-git clone https://github.com/thisisrober/Pr-ctica-PHP-MYSQL.git
-cd Pr-ctica-PHP-MYSQL
+git clone https://github.com/thisisrober/Platinum-Auto---Concesionario
+cd Platinum-Auto---Concesionario
 ```
 
 ### 🔹 3. Importar la base de datos
